@@ -5,6 +5,8 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/auth/pom.xml" />
+        <option value="$PROJECT_DIR$/posts/pom.xml" />
+        <option value="$PROJECT_DIR$/chat/pom.xml" />
       </list>
     </option>
   </component>

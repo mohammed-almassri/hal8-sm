@@ -4,9 +4,10 @@ import com.microtwitter.followservice.dto.FollowListResponse;
 import com.microtwitter.followservice.dto.FollowResponse;
 import com.microtwitter.followservice.model.Follow;
 import com.microtwitter.followservice.repository.FollowRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.kafka.core.KafkaTemplate;
+//import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,15 +17,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class FollowService {
 
     private final FollowRepository followRepository;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+//    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public FollowService(FollowRepository followRepository, KafkaTemplate<String, Object> kafkaTemplate) {
-        this.followRepository = followRepository;
-        this.kafkaTemplate = kafkaTemplate;
-    }
+//    public FollowService(FollowRepository followRepository, KafkaTemplate<String, Object> kafkaTemplate) {
+//        this.followRepository = followRepository;
+//        this.kafkaTemplate = kafkaTemplate;
+//    }
 
     @Transactional
     public FollowResponse follow(Long followingId) {
@@ -46,8 +48,7 @@ public class FollowService {
 
         Follow savedFollow = followRepository.save(follow);
         
-        // Publish follow.created event
-        kafkaTemplate.send("follow-events", "follow.created", toFollowResponse(savedFollow));
+//        kafkaTemplate.send("follow-events", "follow.created", toFollowResponse(savedFollow));
 
         return toFollowResponse(savedFollow);
     }
@@ -59,9 +60,8 @@ public class FollowService {
 
         followRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
         
-        // Publish follow.deleted event
-        kafkaTemplate.send("follow-events", "follow.deleted", 
-            Map.of("followerId", followerId, "followingId", followingId));
+//        kafkaTemplate.send("follow-events", "follow.deleted",
+//            Map.of("followerId", followerId, "followingId", followingId));
     }
 
     public FollowListResponse getFollowers(Long userId, Pageable pageable) {

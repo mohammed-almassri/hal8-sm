@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    ports:
+      - "5454:5432"
+#    networks:
+#      - app-network
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=sm_follow
+#      - POSTGRES_MULTIPLE_DATABASES=microtwitter_users,microtwitter_follows
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - follow_postgres_data:/var/lib/postgresql/data
+#      - ./init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U postgres && psql -U postgres -c 'SELECT 1' -d microtwitter_users && psql -U postgres -c 'SELECT 1' -d microtwitter_follows"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+
+volumes:
+  follow_postgres_data:

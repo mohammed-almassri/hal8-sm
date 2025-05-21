@@ -1,6 +1,7 @@
 package me.hal8.sm.posts.config;
 
 import lombok.AllArgsConstructor;
+import me.hal8.sm.posts.filter.JWTFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,7 +18,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
-//    private final JWTFilter jwtFilter;
+    private final JWTFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,7 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 );
-//        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

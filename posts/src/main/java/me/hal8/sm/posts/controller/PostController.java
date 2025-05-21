@@ -1,6 +1,7 @@
 package me.hal8.sm.posts.controller;
 
 import lombok.AllArgsConstructor;
+import me.hal8.sm.posts.document.CustomUserDetails;
 import me.hal8.sm.posts.document.Post;
 import me.hal8.sm.posts.dto.request.PostRequest;
 import me.hal8.sm.posts.service.EventProducerService;
@@ -8,6 +9,7 @@ import me.hal8.sm.posts.service.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,8 +44,11 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody PostRequest postRequestDto) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var userId = ((CustomUserDetails)auth.getPrincipal()).getId();
         var post = new Post();
         post.setContent(postRequestDto.getContent());
+        post.setUserId(userId);
         Post newPost = postService.createPost(post);
         eventProducerService.sendPostCreatedEvent(newPost);
         return new ResponseEntity<>(newPost, HttpStatus.CREATED);
@@ -71,8 +76,10 @@ public class PostController {
     @PostMapping("/{id}/like")
     public ResponseEntity<Post> likePost(
             @PathVariable String id) {
-        var p =  postService.likePost(id, "ae66da67-a604-454d-8261-bdb37c8f887b").get();
-        eventProducerService.sendPostLikedEvent(p,UUID.fromString("ae66da67-a604-454d-8261-bdb37c8f887b"));
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var userId = ((CustomUserDetails)auth.getPrincipal()).getId();
+        var p =  postService.likePost(id, userId.toString()).get();
+        eventProducerService.sendPostLikedEvent(p,userId);
         return new ResponseEntity<>(p, HttpStatus.OK);
     }
 

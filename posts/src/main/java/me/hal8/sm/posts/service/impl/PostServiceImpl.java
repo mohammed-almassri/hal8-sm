@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,6 +61,9 @@ public class PostServiceImpl implements PostService {
         return postRepository.findByIdNotDeleted(postId)
                 .map(post -> {
                     List<String> likedBy = post.getLikedBy();
+                    if(likedBy==null){
+                        likedBy = new ArrayList<>();
+                    }
                     if (!likedBy.contains(userId)) {
                         likedBy.add(userId);
                         post.setLikes(post.getLikes() + 1);

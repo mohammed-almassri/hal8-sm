@@ -73,11 +73,11 @@ if __name__ == '__main__':
     logging.info("Starting recommendation-service...")
 
     # --- Start publisher in a separate thread ---
-    publisher_thread = threading.Thread(target=start_publisher_thread, args=(KAFKA_BOOTSTRAP_SERVERS, AGNEWS_DATASET_PATH))
-    publisher_thread.daemon = True # Allows the main program to exit even if this thread is still running
-    publisher_thread.start()
-    logging.info("Publisher thread initiated.")
-
+    #publisher_thread = threading.Thread(target=start_publisher_thread, args=(KAFKA_BOOTSTRAP_SERVERS, AGNEWS_DATASET_PATH))
+    #publisher_thread.daemon = True # Allows the main program to exit even if this thread is still running
+    #publisher_thread.start()
+    #logging.info("Publisher thread initiated.")
+#
     # --- Start recommendation generation in a separate thread ---
     recommendation_thread = threading.Thread(target=recommendation_generator_loop)
     recommendation_thread.daemon = True

@@ -6,7 +6,7 @@ services:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
     ports:
-      - "2181:2181"
+      - "2182:2182"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -31,6 +31,13 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - social-media-network
+    healthcheck: # Added healthcheck for Kafka
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server kafka:9092 --list || exit 1"] # Check if Kafka responds
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s # Give Kafka time to warm up before first check
+
 
   # Kafka UI for monitoring Kafka (optional but helpful)
   kafka-ui:
@@ -46,6 +53,19 @@ services:
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
     networks:
       - social-media-network
+  rec-service: # Renamed from recommendation-service for brevity as per your compose file
+    build:
+      context: ./rec-service # Assuming your service code is in a folder named 'recommendation-service'
+    container_name: rec-service
+    depends_on:
+      kafka:
+        condition: service_healthy # IMPORTANT: Wait for Kafka to be healthy
+    networks:
+      - social-media-network
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092 # Connects to Kafka via its service name
+    restart: "unless-stopped" # Keep running unless explicitly stopped
+  
 
 networks:
   social-media-network:

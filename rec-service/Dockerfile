@@ -9,10 +9,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN python -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); nltk.download('omw-1.4')"
 
-# Copy the entire src directory, which now includes mock_event_publisher.py
+# Copy the src directory
 COPY src/ src/
 
-# Copy the dataset into the /app directory (assuming it's in the root of recommendation-service/)
-COPY dataset.csv .
+# --- Remove these lines if you uncommented out the mock publisher calls in main.py ---
+# COPY mock_event_publisher.py .
+# COPY train.csv .
 
 CMD ["python", "src/main.py"]

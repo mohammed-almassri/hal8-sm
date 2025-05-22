@@ -1,7 +1,5 @@
-package me.hal8.sm.posts.config;
+package com.microtwitter.followservice.config;
 
-import me.hal8.sm.posts.dto.event.FollowCreatedEvent;
-import me.hal8.sm.posts.dto.event.RecGeneratedEvent;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -29,9 +27,6 @@ public class KafkaConfig {
     private String consumerGroupId;
 
     // Topic names as constants
-    public static final String TOPIC_POST_CREATED = "post-created";
-    public static final String TOPIC_POST_LIKED = "post-liked";
-    public static final String TOPIC_REC_GENERATED = "rec-generated";
     public static final String TOPIC_FOLLOW_CREATED = "follow-created";
 
     @Bean
@@ -43,13 +38,9 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic postCreatedTopic() {
-        return new NewTopic(TOPIC_POST_CREATED, 1, (short) 1);
+        return new NewTopic(TOPIC_FOLLOW_CREATED, 1, (short) 1);
     }
 
-    @Bean
-    public NewTopic postLikedTopic() {
-        return new NewTopic(TOPIC_POST_LIKED, 1, (short) 1);
-    }
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
@@ -58,34 +49,6 @@ public class KafkaConfig {
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(configProps);
-    }
-
-
-    @Bean
-    public ConsumerFactory<String, FollowCreatedEvent> consumerFactory() {
-        JsonDeserializer<FollowCreatedEvent> deserializer = new JsonDeserializer<>(FollowCreatedEvent.class);
-        deserializer.setRemoveTypeHeaders(false);
-        deserializer.addTrustedPackages("*");
-        deserializer.setUseTypeMapperForKey(true);
-
-        return new DefaultKafkaConsumerFactory<>(
-                Map.of(
-                        ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
-                        ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId,
-                        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
-                        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer
-                ),
-                new StringDeserializer(),
-                deserializer
-        );
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, FollowCreatedEvent> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, FollowCreatedEvent> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
-        return factory;
     }
 
     @Bean

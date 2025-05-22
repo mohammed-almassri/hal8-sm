@@ -1,5 +1,6 @@
 package com.microtwitter.followservice.service;
 
+import com.microtwitter.followservice.dto.FollowCreatedEvent;
 import com.microtwitter.followservice.dto.FollowListResponse;
 import com.microtwitter.followservice.dto.FollowResponse;
 import com.microtwitter.followservice.model.Follow;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 //import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,9 @@ import java.util.stream.Collectors;
 public class FollowService {
 
     private final FollowRepository followRepository;
+    private final KafkaProducerService eventProducerService;
+
+//    private final KafkaTemplate<String, Follow> kafkaTemplate;
 //    private final KafkaTemplate<String, Object> kafkaTemplate;
 
 //    public FollowService(FollowRepository followRepository, KafkaTemplate<String, Object> kafkaTemplate) {
@@ -47,7 +52,8 @@ public class FollowService {
 
         Follow savedFollow = followRepository.save(follow);
         
-//        kafkaTemplate.send("follow-events", "follow.created", toFollowResponse(savedFollow));
+//        kafkaTemplate.send("follow-created", follow.getId().toString(), follow);
+        eventProducerService.sendFollowCreatedEvent(follow);
 
         return toFollowResponse(savedFollow);
     }

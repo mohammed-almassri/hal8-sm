@@ -13,5 +13,5 @@ public class MessageResponse {
     private UUID id;
     private UUID chatId;
     private String content;
-    private ChatParticipantResponse sender;
+    private String senderId;
 }

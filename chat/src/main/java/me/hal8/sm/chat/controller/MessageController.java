@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import me.hal8.sm.chat.dto.generic.ResponseDTO;
 import me.hal8.sm.chat.dto.request.MessageRequest;
 import me.hal8.sm.chat.dto.response.MessageResponse;
+import me.hal8.sm.chat.entity.CustomUserDetails;
 import me.hal8.sm.chat.service.IMessageService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,7 +23,8 @@ public class MessageController {
 
    @PostMapping
     public ResponseEntity<ResponseDTO<MessageResponse>> create(@Valid @RequestBody MessageRequest messageDTO){
-       var message = messageService.createMessage(messageDTO);
+       var details = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       var message = messageService.createMessage(messageDTO,details.getId());
        return ResponseEntity.ok(new ResponseDTO<>("message created successfully",message));
    }
 

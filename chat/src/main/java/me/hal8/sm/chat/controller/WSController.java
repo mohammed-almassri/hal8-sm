@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @Controller
 @AllArgsConstructor
@@ -26,7 +27,7 @@ public class WSController {
         String userId = principal.getName();
         System.out.println("User ID: " + userId);
 
-        var msg = messageService.createMessage(message);
+        var msg = messageService.createMessage(message, UUID.fromString(userId));
         return msg;
     }
 }

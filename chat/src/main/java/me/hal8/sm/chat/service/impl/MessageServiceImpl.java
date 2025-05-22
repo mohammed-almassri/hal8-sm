@@ -23,12 +23,13 @@ public class MessageServiceImpl implements IMessageService {
 
     @Override
     @Transactional
-    public MessageResponse createMessage(MessageRequest messageDTO) {
+    public MessageResponse createMessage(MessageRequest messageDTO,UUID userId) {
         var chat = chatRepository.findById(messageDTO.getChatId()).orElseThrow(()->{
             throw new ResourceNotFoundException("no chat with id "+messageDTO.getChatId());
         });
         messageDTO.setChatId(chat.getId());
         var message = mapper.toEntity(messageDTO);
+        message.setSenderId(userId);
         var saved = messageRepository.save(message);
         return mapper.toDto(saved);
     }

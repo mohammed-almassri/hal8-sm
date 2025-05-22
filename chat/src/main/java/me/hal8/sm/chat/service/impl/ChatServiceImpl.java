@@ -5,12 +5,11 @@ import lombok.AllArgsConstructor;
 import me.hal8.sm.chat.dto.request.ChatParticipantRequest;
 import me.hal8.sm.chat.dto.request.ChatRequest;
 import me.hal8.sm.chat.dto.response.ChatResponse;
-import me.hal8.sm.chat.exception.NotEnoughParticipantException;
+import me.hal8.sm.chat.exception.TooFewParticipantException;
 import me.hal8.sm.chat.exception.ResourceNotFoundException;
 import me.hal8.sm.chat.exception.TooManyParticipantsException;
 import me.hal8.sm.chat.mapper.ChatMapper;
 import me.hal8.sm.chat.mapper.ChatParticipantMapper;
-import me.hal8.sm.chat.repository.ChatParticipantRepository;
 import me.hal8.sm.chat.repository.ChatRepository;
 import me.hal8.sm.chat.service.IChatService;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,7 @@ public class ChatServiceImpl implements IChatService {
 
 
         if (participantDTOs == null || participantDTOs.size() < 2) {
-            throw new NotEnoughParticipantException("You must add at least 2 participants");
+            throw new TooFewParticipantException("You must add at least 2 participants");
         }
 
         if (participantDTOs.size() > 256) {

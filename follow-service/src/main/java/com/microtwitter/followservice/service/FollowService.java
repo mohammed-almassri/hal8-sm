@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,9 +30,7 @@ public class FollowService {
 //    }
 
     @Transactional
-    public FollowResponse follow(Long followingId) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long followerId = getUserIdFromUsername(username); // In real implementation, get from user service or token
+    public FollowResponse follow(UUID followingId,UUID followerId) {
 
         if (followerId.equals(followingId)) {
             throw new IllegalArgumentException("Users cannot follow themselves");
@@ -54,22 +53,16 @@ public class FollowService {
     }
 
     @Transactional
-    public void unfollow(Long followingId) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long followerId = getUserIdFromUsername(username); // In real implementation, get from user service or token
-
+    public void unfollow(UUID followingId,UUID followerId) {
         followRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
-        
-//        kafkaTemplate.send("follow-events", "follow.deleted",
-//            Map.of("followerId", followerId, "followingId", followingId));
     }
 
-    public FollowListResponse getFollowers(Long userId, Pageable pageable) {
+    public FollowListResponse getFollowers(UUID userId, Pageable pageable) {
         Page<Follow> followers = followRepository.findByFollowingId(userId, pageable);
         return toFollowListResponse(followers);
     }
 
-    public FollowListResponse getFollowing(Long userId, Pageable pageable) {
+    public FollowListResponse getFollowing(UUID userId, Pageable pageable) {
         Page<Follow> following = followRepository.findByFollowerId(userId, pageable);
         return toFollowListResponse(following);
     }
@@ -92,10 +85,10 @@ public class FollowService {
         return response;
     }
 
-    // In real implementation, this would either:
-    // 1. Extract user ID from the JWT token
-    // 2. Call the user service to get the ID
-    private Long getUserIdFromUsername(String username) {
-        return 1L; // Placeholder implementation
-    }
+//    // In real implementation, this would either:
+//    // 1. Extract user ID from the JWT token
+//    // 2. Call the user service to get the ID
+//    private UUID getUserIdFromUsername(String username) {
+//        return 1L; // Placeholder implementation
+//    }
 }

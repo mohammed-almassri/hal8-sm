@@ -12,12 +12,12 @@ import java.util.UUID;
 
 @Repository
 public interface PostRepository extends MongoRepository<Post,String> {
-    @Query("{'userId': ?0, 'deletedAt': null}")
+    @Query(value="{'userId': ?0, 'deletedAt': null}",collation = "en")
     List<Post> findByUserId(UUID userId);
 
     @Query(value = "{'id': ?0, 'deletedAt': null}",collation = "en")
     Optional<Post> findByIdNotDeleted(String id);
 
-    @Query("{'deletedAt': null}")
+    @Query(value = "{'deletedAt': null}", collation = "en")
     List<Post> findAllNotDeleted();
 }

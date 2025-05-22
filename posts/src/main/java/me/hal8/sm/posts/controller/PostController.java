@@ -83,14 +83,14 @@ public class PostController {
         return new ResponseEntity<>(p, HttpStatus.OK);
     }
 
-//    @PostMapping("/{id}/unlike")
-//    public ResponseEntity<PostResponseDto> unlikePost(
-//            @PathVariable String id,
-//            @RequestBody LikeRequestDto likeRequestDto) {
-//        return postService.unlikePost(id, likeRequestDto.getUserId())
-//                .map(post -> new ResponseEntity<>(postMapper.toDto(post), HttpStatus.OK))
-//                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//    }
+    @PostMapping("/{id}/unlike")
+    public ResponseEntity<Post> unlikePost(
+            @PathVariable String id) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var userId = ((CustomUserDetails)auth.getPrincipal()).getId();
+        var p =  postService.unlikePost(id, userId.toString()).get();
+        return new ResponseEntity<>(p, HttpStatus.OK);
+    }
 //
 //    @PostMapping("/{id}/share")
 //    public ResponseEntity<PostResponseDto> sharePost(

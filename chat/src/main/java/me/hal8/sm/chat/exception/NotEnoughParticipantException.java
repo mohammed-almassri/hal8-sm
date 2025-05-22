@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class TooFewParticipantException extends RuntimeException{
-    public TooFewParticipantException(String message){
+public class NotEnoughParticipantException extends RuntimeException{
+    public NotEnoughParticipantException(String message){
         super(message);
     }
 }

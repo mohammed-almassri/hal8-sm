@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
 
 spring:
   application:
@@ -48,7 +48,7 @@ spring:
 # JWT Configuration (for validating tokens)
 jwt:
   secret: JGJuDvVvbDPgY/Y2zyjogNGtMUQqAaV+W+wY5k9CBf1GJiT4Ll+UtBpxRkZCEIwDX8TRQBO9nAZOVn8ij8fvKQ== # Should match user-service secret
-
+  expiration: 3600000
 # User Service Configuration
 user-service:
   url: http://user-service:8081/api/v1

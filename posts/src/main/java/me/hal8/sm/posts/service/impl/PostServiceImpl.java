@@ -78,11 +78,15 @@ public class PostServiceImpl implements PostService {
         return postRepository.findByIdNotDeleted(postId)
                 .map(post -> {
                     List<String> likedBy = post.getLikedBy();
-                    if (likedBy.remove(userId)) {
+//                    if(likedBy==null){
+//                        likedBy = new ArrayList<>();
+//                    }
+
+//                    if (likedBy.remove(userId)) {
                         post.setLikes(post.getLikes() - 1);
                         return postRepository.save(post);
-                    }
-                    return post;
+//                    }
+//                    return post;
                 });
     }
 

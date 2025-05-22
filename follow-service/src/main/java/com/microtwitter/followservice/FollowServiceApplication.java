@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @SpringBootApplication
 @EnableJpaRepositories
+@EnableWebSecurity
 public class FollowServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(FollowServiceApplication.class, args);

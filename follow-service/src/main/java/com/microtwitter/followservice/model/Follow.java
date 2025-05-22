@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -17,10 +18,10 @@ public class Follow {
     private Long id;
 
     @Column(nullable = false)
-    private Long followerId;
+    private UUID followerId;
 
     @Column(nullable = false)
-    private Long followingId;
+    private UUID followingId;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
